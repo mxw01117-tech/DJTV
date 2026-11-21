@@ -14,13 +14,18 @@ jobs:
         with:
           distribution: temurin
           java-version: '17'
-      - uses: android-actions/setup-android@v3
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.9'
+      - name: Show Android SDK environment
+        run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
+          ls -la "$ANDROID_HOME/platforms" || true
+          ls -la "$ANDROID_HOME/build-tools" || true
       - name: Build debug APKs
         run: gradle --no-daemon :phone:assembleDebug :tv:assembleDebug
       - uses: actions/upload-artifact@v4
+        if: success()
         with:
           name: DajeongTV-debug-APKs
           path: |
